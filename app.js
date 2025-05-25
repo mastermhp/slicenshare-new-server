@@ -18,7 +18,8 @@ connectmongoDB();
 const corsOptions = {
   origin: [
     `http://localhost:${process.env.PORT}`,
-    'https://slicenshare.vercel.app'
+    'https://slicenshare.vercel.app',
+    `https://slicenshare-new-server.vercel.app`
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
