@@ -1,14 +1,14 @@
-const dotenv = require('dotenv');
-const express = require('express');
-const cors = require('cors');
-const xss = require('xss-clean');
-const path = require('path');
-const connectmongoDB = require('./config/mongodbConfig.js');
+const dotenv = require("dotenv");
+const express = require("express");
+const cors = require("cors");
+const xss = require("xss-clean");
+const path = require("path");
+const connectmongoDB = require("./config/mongodbConfig.js");
 
-const homepageRoutes = require('./v1/routes/homepage');
-const productRoutes = require('./v1/routes/product');
-const streamerRoutes = require('./v1/routes/streamer');
-const cartRoutes = require('./v1/routes/cart');
+const homepageRoutes = require("./v1/routes/homepage");
+const productRoutes = require("./v1/routes/product");
+const streamerRoutes = require("./v1/routes/streamer");
+const cartRoutes = require("./v1/routes/cart");
 
 dotenv.config();
 const app = express();
@@ -17,12 +17,13 @@ connectmongoDB();
 // Define CORS options
 const corsOptions = {
   origin: [
+    "http://localhost:3000",
     `http://localhost:${process.env.PORT}`,
-    'https://slicenshare.vercel.app',
-    `https://slicenshare-new-server.vercel.app`
+    `https://slicenshare-new-server.vercel.app`,
+    "https://slicenshare.vercel.app",
   ],
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
   optionsSuccessStatus: 200, // For legacy browsers
 };
@@ -31,23 +32,26 @@ app.use(express.json());
 // Apply CORS middleware globally
 app.use(cors(corsOptions));
 // Handle preflight requests with CORS
-app.options('*', cors(corsOptions));
+app.options("*", cors(corsOptions));
 // Serve static files with correct MIME types
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/public', express.static(path.join(__dirname, 'public'), {
-  setHeaders: (res, path, stat) => {
-    if (path.endsWith('.ico')) {
-      res.setHeader('Content-Type', 'image/x-icon');
-    }
-    if (path.endsWith('.css')) {
-      res.setHeader('Content-Type', 'text/css');
-    }
-    if (path.endsWith('.js')) {
-      res.setHeader('Content-Type', 'application/javascript');
-    }
-  },
-}));
-app.get(['/api/v1', '/api/v1/'], (req, res) => {
+app.use(express.static(path.join(__dirname, "public")));
+app.use(
+  "/public",
+  express.static(path.join(__dirname, "public"), {
+    setHeaders: (res, path, stat) => {
+      if (path.endsWith(".ico")) {
+        res.setHeader("Content-Type", "image/x-icon");
+      }
+      if (path.endsWith(".css")) {
+        res.setHeader("Content-Type", "text/css");
+      }
+      if (path.endsWith(".js")) {
+        res.setHeader("Content-Type", "application/javascript");
+      }
+    },
+  })
+);
+app.get(["/api/v1", "/api/v1/"], (req, res) => {
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
@@ -91,12 +95,12 @@ app.get(['/api/v1', '/api/v1/'], (req, res) => {
   `);
 });
 
-app.use('/api/v1/homepage', homepageRoutes);
+app.use("/api/v1/homepage", homepageRoutes);
 
-app.use('/api/v1/products', productRoutes);
-app.use('/api/v1/streamers', streamerRoutes);
+app.use("/api/v1/products", productRoutes);
+app.use("/api/v1/streamers", streamerRoutes);
 
-app.use('/api/v1/cart', cartRoutes);
+app.use("/api/v1/cart", cartRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
